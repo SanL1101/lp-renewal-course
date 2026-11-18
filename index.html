@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>续费全流程（LP培训）</title>
+<style>
+:root{--primary:#4F46E5;--primary-light:#EEF2FF;--primary-dark:#3730A3;--accent:#D97706;--accent-light:#FEF3C7;--success:#059669;--danger:#DC2626;--bg:#F8FAFC;--card:#FFFFFF;--text:#1E293B;--text-secondary:#64748B;--border:#E2E8F0;--shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);--shadow-lg:0 10px 25px rgba(0,0,0,0.08);--radius:12px;--radius-sm:8px;--sidebar-bg:#1e293b;--sidebar-text:#cbd5e1;--sidebar-active:#6366f1}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Noto Sans HK',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;display:flex;min-height:100vh}
+.sidebar{width:280px;min-width:280px;background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform 0.3s}
+.sidebar-close-btn{display:none;position:absolute;top:8px;right:12px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;z-index:10;padding:8px;line-height:1}
+.sidebar-header{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.sidebar-header h3{font-size:14px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.sidebar-header .course-title{font-size:16px;font-weight:700;color:#fff;line-height:1.4}
+.sidebar-progress{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:#94a3b8;margin-bottom:8px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--sidebar-active);border-radius:3px;transition:width .5s ease;width:0%}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 0}
+.nav-section{padding:8px 20px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:all .2s;border-left:3px solid transparent}
+.nav-section:hover{background:rgba(255,255,255,0.05)}
+.nav-section.active{background:rgba(99,102,241,0.15);border-left-color:var(--sidebar-active);color:#fff}
+.nav-section.completed{color:#94a3b8}
+.nav-section.completed .nav-icon{background:var(--success);color:#fff}
+.nav-section.locked{opacity:.45;cursor:not-allowed;pointer-events:none}
+.nav-section.locked .nav-icon{background:rgba(255,255,255,0.08);color:#64748b}
+.nav-icon{width:32px;height:32px;min-width:32px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--sidebar-text);transition:all .3s}
+.nav-section.active .nav-icon{background:var(--sidebar-active);color:#fff}
+.nav-info .nav-label{font-size:13px;font-weight:600}
+.nav-info .nav-sub{font-size:11px;color:#64748b;margin-top:2px}
+.nav-section.active .nav-info .nav-sub{color:#94a3b8}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:#64748b}
+.study-timer{padding:10px 20px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px;font-size:13px}
+.timer-icon{font-size:16px}
+.timer-display{color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer-label{color:#94a3b8;font-size:11px}
+.main{margin-left:280px;flex:1;padding:40px;max-width:900px}
+.section{display:none;animation:fadeSlide .4s ease}
+.section.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.section-header{margin-bottom:32px}
+.section-badge{display:inline-block;padding:4px 14px;background:#dbeafe;color:var(--primary-dark);border-radius:20px;font-size:13px;font-weight:600;margin-bottom:12px}
+.section-header h1{font-size:28px;font-weight:800;color:var(--text);margin-bottom:8px}
+.section-header .duration{font-size:14px;color:var(--text-secondary)}
+.card{background:var(--card);border-radius:var(--radius);padding:28px;margin-bottom:20px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.card-title{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--text)}
+.highlight-box{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-left:4px solid var(--primary);padding:20px 24px;border-radius:var(--radius-sm);margin:20px 0}
+.highlight-box.warning{background:linear-gradient(135deg,#fef3c7,#fde68a);border-left-color:var(--accent)}
+.highlight-box.success{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-left-color:var(--success)}
+.script-block{background:#f1f5f9;padding:20px 24px;border-radius:var(--radius-sm);font-style:italic;color:#475569;position:relative;margin:16px 0;line-height:1.8}
+.script-block::before{content:'\01f399\00fe0f 话术范例';position:absolute;top:-10px;left:16px;background:#475569;color:#fff;padding:2px 10px;border-radius:10px;font-size:11px;font-style:normal}
+.flow-steps{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap}
+.flow-step{flex:1;min-width:140px;background:var(--card);border:2px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;box-shadow:var(--shadow)}
+.flow-step .step-num{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;margin-bottom:12px}
+.flow-step h4{font-size:14px;font-weight:700;margin-bottom:8px}
+.flow-step p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.flow-arrow{display:flex;align-items:center;font-size:24px;color:var(--primary);font-weight:700}
+.strategy-grid{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap}
+.strategy-card{flex:1;min-width:200px;background:var(--card);border:2px solid var(--border);border-radius:var(--radius-sm);padding:24px;text-align:center;box-shadow:var(--shadow)}
+.strategy-card .icon{font-size:36px;margin-bottom:12px}
+.strategy-card h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.strategy-card p{font-size:13px;color:var(--text-secondary)}
+.step-list{counter-reset:step}
+.step-item{counter-increment:step;display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--border)}
+.step-item:last-child{border-bottom:none}
+.step-num-big{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0}
+.step-content h4{font-size:16px;color:var(--text);margin-bottom:4px}
+.step-content p{font-size:14px;color:var(--text-secondary)}
+.chat-scene{max-width:650px;margin:0 auto}
+.chat-msg{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.chat-msg.lp{flex-direction:row}
+.chat-msg.parent{flex-direction:row-reverse}
+.chat-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
+.chat-msg.lp .chat-avatar{background:#EEF2FF;color:var(--primary-dark)}
+.chat-msg.parent .chat-avatar{background:#FEF3C7;color:var(--accent)}
+.chat-bubble{max-width:75%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.6}
+.chat-msg.lp .chat-bubble{background:#F1F5F9;color:var(--text);border-bottom-left-radius:4px}
+.chat-msg.parent .chat-bubble{background:#EEF2FF;color:var(--text);border-bottom-right-radius:4px}
+.chat-label{font-size:11px;color:var(--text-secondary);margin-bottom:4px}
+.tab-wrap{display:flex;gap:4px;margin-bottom:16px;background:var(--border);border-radius:10px;padding:4px;flex-wrap:wrap}
+.tab-btn{flex:1;min-width:70px;padding:8px 12px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;color:var(--text-secondary);transition:all .2s}
+.tab-btn.active{background:var(--card);color:var(--primary);font-weight:600;box-shadow:var(--shadow)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.highlight{background:linear-gradient(180deg,transparent 60%,#FEF08A 60%);padding:0 4px}
+.tips-box{background:var(--accent-light);border-left:4px solid var(--accent);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px}
+.tips-box strong{color:var(--accent)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-primary{background:var(--primary-light);color:var(--primary)}
+.badge-warning{background:var(--accent-light);color:var(--accent)}
+.badge-success{background:#ECFDF5;color:var(--success)}
+.quiz-card{background:var(--card);border-radius:var(--radius);padding:28px;margin:12px 0;box-shadow:var(--shadow-lg);border:2px solid var(--border)}
+.quiz-question{font-size:16px;font-weight:600;margin-bottom:20px;line-height:1.7}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;padding:16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;min-height:48px}
+.quiz-option:hover{border-color:var(--primary-light);background:#f0f7ff}
+.quiz-option.correct{border-color:var(--success)!important;background:#ecfdf5!important}
+.quiz-option.wrong{border-color:var(--danger)!important;background:#fef2f2!important}
+.quiz-option.disabled{opacity:.5;cursor:default;border-color:#e2e8f0;background:#f8fafc}
+.quiz-option.correct .quiz-option-label{background:var(--success);color:#fff}
+.quiz-option.wrong .quiz-option-label{background:var(--danger);color:#fff}
+.quiz-option-label{width:28px;height:28px;border-radius:50%;background:var(--primary-light);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.quiz-feedback{display:none;margin-top:16px;padding:16px;border-radius:var(--radius-sm);font-size:14px;line-height:1.7}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct{background:#ecfdf5;color:#065f46}
+.quiz-feedback.wrong{background:#fef2f2;color:#991b1b}
+.final-task-container{background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-lg);border:2px solid var(--border)}
+.final-task-input{width:100%;min-height:180px;padding:16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;line-height:1.8;resize:vertical;font-family:inherit}
+.final-task-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.final-task-input:disabled{background:#f1f5f9;cursor:not-allowed}
+.char-counter{text-align:right;font-size:12px;color:var(--text-secondary);margin-top:6px}
+.ai-feedback-panel{display:none;margin-top:24px}
+.ai-feedback-panel.show{display:block}
+.score-display{text-align:center;margin:16px 0}
+.score-circle{width:80px;height:80px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff}
+.score-circle.high{background:linear-gradient(135deg,#10b981,#059669)}
+.score-circle.medium{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.score-circle.low{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.eval-dimensions{display:flex;gap:16px;flex-wrap:wrap}
+.eval-dim{flex:1;min-width:150px;background:#f8fafc;border-radius:var(--radius-sm);padding:20px;text-align:center}
+.keywords-result{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center}
+.keyword-tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:500}
+.keyword-tag.found{background:#ecfdf5;color:#065f46}
+.keyword-tag.missing{background:#fef2f2;color:#991b1b}
+.dialogue-container{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-lg);border:2px solid var(--border);overflow:hidden}
+.dialogue-header{padding:16px 20px;background:var(--primary-light);border-bottom:1px solid var(--border);font-weight:700;color:var(--primary-dark);display:flex;justify-content:space-between;align-items:center}
+.dialogue-messages{max-height:400px;overflow-y:auto;padding:16px 20px;min-height:150px}
+.dialogue-input-area{display:flex;padding:12px 20px;border-top:1px solid var(--border);gap:8px}
+.dialogue-input-area input{flex:1;padding:12px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit}
+.dialogue-input-area input:focus{outline:none;border-color:var(--primary)}
+.btn{padding:12px 24px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;background:var(--primary);color:#fff}
+.btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-outline{background:var(--card);color:var(--primary);border:2px solid var(--primary)}
+.btn-outline:hover{background:var(--primary-light)}
+.btn-success{background:var(--success);color:#fff}
+.btn-sm{padding:8px 16px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.section-nav-buttons{display:flex;justify-content:space-between;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:8px;color:#fff;font-size:14px;font-weight:600;z-index:9999;animation:slideDown .3s ease}
+.toast.warning{background:#d97706}
+.toast.success{background:#059669}
+.toast.error{background:#dc2626}
+@keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.notes-toggle{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:90}
+.notes-panel{position:fixed;bottom:0;right:0;width:340px;background:var(--card);border-left:1px solid var(--border);border-top:1px solid var(--border);box-shadow:-4px -4px 20px rgba(0,0,0,0.1);padding:20px;transform:translateX(100%);transition:transform .3s;z-index:200}
+.notes-panel.open{transform:translateX(0)}
+.notes-panel textarea{width:100%;height:200px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;resize:vertical}
+.cert-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;justify-content:center;align-items:center}
+.cert-paper{background:#fff;width:700px;padding:48px 36px;text-align:center;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.cert-paper h1{font-size:28px;color:#3730A3;margin-bottom:4px}
+.cert-paper .sub{font-size:12px;color:#64748b;letter-spacing:.1em;margin-bottom:24px}
+.cert-paper .body{font-size:15px;line-height:2;color:#1e293b}
+.cert-paper .name{display:inline-block;border-bottom:2px solid #4F46E5;min-width:120px;padding:4px 12px;margin:0 4px}
+.cert-paper .course{font-weight:700;color:#3730A3;margin:8px 0}
+.cert-paper .score{margin:20px 0 4px;font-size:16px;font-weight:600;color:#10b981}
+.cert-paper .final-score{margin:4px 0 20px;font-size:14px;font-weight:600;color:#3730A3}
+.cert-footer{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-top:32px;border-top:1px solid #e2e8f0;padding-top:16px}
+.cert-actions{margin-top:24px;display:flex;gap:12px;justify-content:center}
+.ch3-textarea{width:100%;min-height:220px;padding:16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;line-height:1.8;resize:vertical;font-family:inherit}
+.ch3-textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.practice-textarea{width:100%;min-height:280px;padding:16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;line-height:1.8;resize:vertical;font-family:inherit;box-sizing:border-box}
+.practice-textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.ch3-ref-panel{display:none;margin-top:16px}
+.ch3-ref-panel.show{display:block}
+.course-img{max-width:100%;border-radius:var(--radius-sm);box-shadow:var(--shadow);margin:16px 0;border:1px solid var(--border)}
+.mobile-header{display:none;position:fixed;top:0;left:0;right:0;background:var(--sidebar-bg);color:#fff;padding:12px 16px;z-index:99;align-items:center;justify-content:space-between}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}
+.typing-indicator{display:flex;gap:4px;padding:10px 14px;background:#EEF2FF;border-radius:14px;border-bottom-right-radius:4px;width:fit-content}
+.typing-indicator span{width:8px;height:8px;background:#94a3b8;border-radius:50%;animation:typing 1.4s infinite ease-in-out}
+.typing-indicator span:nth-child(2){animation-delay:.2s}
+.typing-indicator span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.dialogue-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.final-actions{flex-wrap:wrap}
+.final-call-btn{padding:14px 28px;font-size:16px;display:inline-flex;align-items:center;gap:8px}
+.final-score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.final-score-card{background:#f8fafc;border-radius:var(--radius-sm);padding:16px;text-align:center}
+.final-score-card .score{font-size:24px;font-weight:800;color:var(--primary)}
+.final-score-card .label{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.final-feedback-text{background:#f8fafc;border-radius:var(--radius-sm);padding:16px;font-size:14px;line-height:1.7;margin-top:16px}
+.sidebar-overlay.show{display:block}
+@media(max-width:1024px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.sidebar-close-btn{display:block}.main{margin-left:0;padding:24px 16px;padding-top:60px}.mobile-header{display:flex}.eval-dimensions{flex-direction:column}.cert-paper{width:95%;padding:24px 16px}.flow-steps{flex-direction:column}.flow-arrow{transform:rotate(90deg);justify-content:center}}
+</style>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+<button class="sidebar-close-btn" onclick="toggleSidebar()">✕</button>
+<div class="sidebar-header"><h3>LP 培训微课</h3><div class="course-title">续费全流程</div></div>
+<div class="study-timer"><span class="timer-icon">⏱</span><div><div class="timer-display" id="timerDisplay">00:00</div><div class="timer-label">学习时长</div></div></div>
+<div class="sidebar-progress"><div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
+<div class="sidebar-nav" id="sidebarNav"></div>
+<div class="sidebar-footer">VIPTHINK · LP 续费培训</div>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="mobile-header" id="mobileHeader"><button style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer" onclick="toggleSidebar()">☰</button><span style="font-weight:700;font-size:15px" id="mhTitle">续费全流程</span><span style="font-size:13px;color:#94a3b8" id="mhTimer">⏱ 00:00</span></div>
+<div class="main" id="mainContent"></div>
+
+<!-- Certificate -->
+<div class="cert-overlay" id="certOverlay">
+<div class="cert-paper" id="certPaper">
+<h1>🏆 结业证书</h1><div class="sub">CERTIFICATE OF COMPLETION</div>
+<div class="body"><p>兹证明</p><p class="name" id="certStudentName">请填写姓名</p><p>已完成 VIPTHINK LP 培训课程</p><p class="course">「续费全流程」</p><p class="score" id="certScore">综合评定：通过</p><p class="final-score" id="certFinalScore">终极考核得分：-- 分</p></div>
+<div class="cert-footer"><span id="certDate"></span><span>VIPTHINK</span></div>
+<div class="cert-actions"><button class="btn" onclick="printCertificate()">🖨️ 打印证书</button><button class="btn btn-outline" onclick="closeCertificate()">关闭</button></div>
+</div></div>
+
+<button class="notes-toggle" onclick="toggleNotes()">📝</button>
+<div class="notes-panel" id="notesPanel">
+<h3>📝 学习笔记 — <span id="notesChapterLabel" style="font-weight:400;font-size:13px;color:var(--text-secondary)"></span></h3>
+<textarea id="notesTextarea" placeholder="在这里记录你的学习心得..."></textarea>
+<button class="btn btn-outline" onclick="toggleNotes()" style="margin-top:12px;width:100%">关闭</button>
+</div>
+<script>
+// ============================================================
+// Course Data
+// ============================================================
+const courseData = { title: '续费全流程 · LP培训', sections: [
+  { id:'s1', title:'续费政策与策略', duration:'8-10分钟', icon:'1', type:'content_quiz', quizId:'quiz1',
+    content:'<div class="section-header"><span class="section-badge">第1章</span><h1>续费政策与策略</h1><p class="duration">⏱ 学习时长：8-10分钟 | 📝 含3道测验题</p></div>'
+    +'<div class="card"><h2>🎯 续费政策核心</h2><p>以新签课包整体生命周期的 <span class="highlight">1/3</span> 为划分节点，将续费分为三个关键阶段：</p></div>'
+    +'<div class="strategy-grid"><div class="strategy-card"><div class="icon">🚀</div><h4>升舱期</h4><p>可购买升舱课包，优惠力度最大。最佳续费窗口期。</p></div><div class="strategy-card"><div class="icon">🐦</div><h4>早鸟期</h4><p>可购买普通课包，优惠力度中等。</p></div><div class="strategy-card"><div class="icon">🏁</div><h4>结课期</h4><p>可购买普通课包，优惠力度相对较小。</p></div></div>'
+    +'<div class="tips-box"><strong>💡 运营支持：</strong>运营每月初会提供一续至三续池学员名单，需重点跟进促进转化。</div>'
+    +'<div class="card"><h2>🌍 港澳续费策略</h2><p>针对港澳学员，需结合当地教育环境：</p><ul><li>关注呈分试、幼升小面试等关键升学节点</li><li>强调粤语授课与香港主流教材的贴合度</li><li>利用本地竞争环境（Band 1中学准备）制造紧迫感</li></ul></div>' },
+  { id:'s2', title:'续费沟通核心逻辑', duration:'6-8分钟', icon:'2', type:'content_quiz', quizId:'quiz2',
+    content:'<div class="section-header"><span class="section-badge">第2章</span><h1>续费沟通核心逻辑</h1><p class="duration">⏱ 学习时长：6-8分钟 | 📝 含3道测验题</p></div>'
+    +'<div class="card"><h2>🧠 消费决策的本质：性价比</h2><p>不论理性消费还是冲动消费，家长最终决策时都认为是<span class="highlight">性价比合适</span>的。续费沟通的核心就是围绕"性价比"构建说服逻辑。</p></div>'
+    +'<div class="strategy-grid"><div class="strategy-card"><div class="icon">📊</div><h4>学习效果</h4><p>当下孩子学习的外化 + 未来家长的期望。用数据展示进步。</p></div><div class="strategy-card"><div class="icon">🤝</div><h4>服务质量</h4><p>教学质量 + LP粘合度。让家长感受"想他所想急他所需"。</p></div><div class="strategy-card"><div class="icon">💰</div><h4>续费价格</h4><p>优惠是相对的、有限的、来之不易的。让优惠显得稀缺而珍贵。</p></div></div>'
+    +'<div class="highlight-box">"消费决策的本质 = 性价比。我们要做的，是让家长感知到：学习效果 + 服务质量 + 续费价格 = 超值。"</div>' },
+  { id:'s3', title:'学情反馈实战', duration:'10-12分钟', icon:'3', type:'content', quizId:'',
+    content:'<div class="section-header"><span class="section-badge">第3章</span><h1>学情反馈实战</h1><p class="duration">⏱ 学习时长：10-12分钟 | ✍️ 案例编写话术</p></div>'
+    +'<div class="card"><h2>📖 学情反馈五要素</h2><div class="step-list">'
+    +'<div class="step-item"><div class="step-num-big">1</div><div class="step-content"><h4>知识内容+方法能力</h4><p>反馈孩子在具体专题上的进步，从"不会"到"会用方法解决问题"</p></div></div>'
+    +'<div class="step-item"><div class="step-num-big">2</div><div class="step-content"><h4>效果外化</h4><p>结合家长报名初衷，展示孩子达到了当初期望的目标</p></div></div>'
+    +'<div class="step-item"><div class="step-num-big">3</div><div class="step-content"><h4>学习习惯变化</h4><p>预习-出席-课后复习的闭环数据变化、积极性、独立性、细心程度</p></div></div>'
+    +'<div class="step-item"><div class="step-num-big">4</div><div class="step-content"><h4>课堂表现</h4><p>表达能力、专注度、规则意识的变化</p></div></div>'
+    +'<div class="step-item"><div class="step-num-big">5</div><div class="step-content"><h4>待提升点</h4><p>至少提出一个待提升点并给出建议，为课程规划做铺垫</p></div></div></div></div>'
+    +'<div class="script-block">话术示例（知识内容反馈）：<br>老师反馈刚开始学习XX知识的时候孩子在理解上还有些困难，但是经过课后练习和时间的消化，孩子在相应专题的自评上结果还是非常不错的。而且也学会了用XX方法解决问题，老师说孩子的XX思维有了很大的提升呢。</div>'
+    +'<div class="card"><h2>✍️ 实战练习：编写学情反馈话术</h2><p>请根据以下学员信息，编写一段给家长（果果妈妈）的学情反馈话术。<span class="highlight">要求包含：知识内容进步、学习习惯变化、课堂表现、效果外化、待提升点。</span></p>'
+    +'<div class="highlight-box warning"><strong>👦 学员信息：</strong>果果，6岁男孩，香港，S3专题10。首次报名5888元45赠5+打卡24次。剩余10节。妈妈负责学习，有二宝要照顾，平日不方便接电话。<br><br>出勤100%，作业100%，请假也会及时补课。活泼积极，大胆发言互动，很喜欢小泡芙老师。计算基础比较薄弱，比较好动，注意力有限。</div>'
+    +'<p style="margin-top:16px;font-weight:600">请在下方输入你编写的学情反馈话术：</p>'
+    +'<textarea class="ch3-textarea" id="ch3Textarea" placeholder="请根据果果的实际情况编写学情反馈话术...&#10;&#10;参考框架：&#10;1. 知识内容：S3专题10的学习进步&#10;2. 学习习惯：出勤、作业、打卡情况&#10;3. 课堂表现：活泼积极、大胆发言等优点 + 好动、注意力有限等需改进点&#10;4. 效果外化：结合家长陪伴上课的投入，展示孩子进步&#10;5. 待提升点：计算基础薄弱，需要后续课程重点巩固"></textarea>'
+    +'<div style="margin-top:12px;display:flex;gap:12px;align-items:center"><button class="btn" id="ch3SubmitBtn" onclick="submitCh3()">📝 提交</button><span id="ch3Warn" style="color:var(--danger);font-size:13px;display:none">⚠️ 请至少输入50字后再提交</span><span id="ch3Done" style="color:var(--success);font-weight:600;font-size:14px;display:none">✅ 已提交</span><button class="btn btn-outline btn-sm" id="ch3ResetBtn" onclick="resetCh3()" style="display:none">🔄 重新作答</button></div>'
+    +'<div id="ch3RefPanel" class="ch3-ref-panel"><div class="highlight-box success"><strong>📋 参考话术：</strong><br>果果妈妈您好！想跟您分享一下果果近期在S3专题10的学习情况。果果在专题内容的学习上进步非常明显，刚开始接触这个专题时对抽象逻辑的理解还有些困难，但经过课堂学习和课后练习，现在已经能较好地运用所学方法解决同类问题了。老师特别反馈，果果的数理思维在这几个专题里有了明显提升！<br><br>在学习习惯方面，果果出勤率100%，作业完成率也是100%，请假后都会主动及时补课，学习闭环做得非常好。课堂表现上，果果活泼积极，大胆发言互动，和小泡芙老师配合得很默契。不过果果的计算基础还稍微薄弱一些，比较好动，注意力持续时间有限，这些我们会在后续课程中重点帮助巩固和提升。<br><br>您平时一直陪伴果果上课，这份投入让果果的学习状态越来越好。接下来还有几节课时，建议咱们也考虑一下后续的学习规划，让果果能一鼓作气把基础打得更扎实！</div></div>'
+    +'<div id="ch3ScorePanel" class="ch3-ref-panel" style="display:none"><div class="card"><h2 style="margin-bottom:16px;color:var(--primary)">📊 学情反馈评分</h2><div id="ch3ScoreDims"></div><div style="text-align:center;margin-top:16px;padding:16px;border-radius:8px;font-size:18px;font-weight:700" id="ch3ScoreTotal"></div></div></div></div>' },
+  { id:'s4', title:'课程规划', duration:'8-10分钟', icon:'4', type:'content_quiz', quizId:'quiz4',
+    content:'<div class="section-header"><span class="section-badge">第4章</span><h1>课程规划</h1><p class="duration">⏱ 学习时长：8-10分钟 | 📝 含3道测验题</p></div>'
+    +'<div class="card"><h2>🌱 豌豆9阶课程体系</h2><p>思维培养是一个长远、有系统的过程。豌豆课程分为三个大阶段：</p></div>'
+    +'<div class="strategy-grid"><div class="strategy-card"><div class="icon">🏫</div><h4>第一阶段：幼儿园</h4><p>思维具体，初步启蒙。对思考产生兴趣，肯主动思考和探索。</p></div><div class="strategy-card"><div class="icon">📚</div><h4>第二阶段：小一至小三</h4><p>抽象逻辑思维萌芽，<strong>思维形成期</strong>，最关键阶段。重点做好学习习惯和能力衔接。</p></div><div class="strategy-card"><div class="icon">🎓</div><h4>第三阶段：小四至小六</h4><p>抽象逻辑思维初步建立，思维综合运用期。重点培养归纳总结和知识迁移能力。</p></div></div>'
+    +'<div class="card"><h2>🎯 S2/S3关键期分析</h2><div class="script-block">我哋宝贝而家已经成功升上豌豆S2级别课程，处于思维启蒙期，讲通俗啲就系打根基嘅阶段。呢个阶段仲有S3阶段课程，会帮小朋友巩固基础，同时系幼稚园升小学嘅衔接期，为小朋友做好更充足准备。根基打稳之后，后期去到思维形成期，小朋友就可以好快掌握思维方法同素质，提升思维能力。所以而家正系小朋友学习思维最关键嘅时期。</div></div>'
+    +'<div class="card"><h2>📐 从待提升点到解决方案</h2><div class="step-list"><div class="step-item"><div class="step-num-big">1</div><div class="step-content"><h4>知识内容+方法能力</h4><p>结合学员薄弱项，告知未来将要学习的巩固和完善内容</p></div></div><div class="step-item"><div class="step-num-big">2</div><div class="step-content"><h4>学习习惯</h4><p>班主任、老师、家长三方配合</p></div></div><div class="step-item"><div class="step-num-big">3</div><div class="step-content"><h4>课堂表现</h4><p>结合产品提出建议，三方配合</p></div></div><div class="step-item"><div class="step-num-big">4</div><div class="step-content"><h4>结合家长期望</h4><p>询问家长想提高哪方面的能力，对目前教学内容是否满意</p></div></div></div></div>' },
+  { id:'s5', title:'课包方案与推单', duration:'12-15分钟', icon:'5', type:'content', quizId:'',
+    content:'<div class="section-header"><span class="section-badge">第5章</span><h1>课包方案与推单</h1><p class="duration">⏱ 学习时长：12-15分钟 | ✍️ 报价话术编写</p></div>'
+    +'<div class="card"><h2>📋 续费五步法流程</h2><div class="flow-steps"><div class="flow-step"><div class="step-num">1</div><h4>学情反馈</h4></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">2</div><h4>课程规划</h4></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">3</div><h4>课包方案</h4></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">4</div><h4>推单</h4></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">5</div><h4>异议处理</h4></div></div></div>'
+    +'<div class="card"><h2>📊 课包方案设计</h2><div class="strategy-grid"><div class="strategy-card"><div class="icon">📦</div><h4>方案一：长期方案</h4><p>课时多，总价高，单价低。突出优惠单价和学习周期。</p></div><div class="strategy-card"><div class="icon">📋</div><h4>方案二：短期方案</h4><p>课时少，总价低，单价高。突出报名时的差价对比。</p></div></div>'
+    +'<div class="tips-box"><strong>💡 试探技巧：</strong>"妈妈您是更加倾向于学习到S3结束还是S2结束呢？" / "您更倾向于长期还是短期呢？"</div></div>'
+    +'<div class="card"><h2>💬 推单话术（性价比+紧迫性 - 粤语）</h2><div class="script-block">妈妈你而家主要考虑总价定单价呢？有冇预算呀？又或者小朋友想学到边个程度？如果今日可以落实报名，我可以再同经理申请额外优惠。XXX蚊你买嘅唔止係方案入面嘅X堂课，仲可以额外获得XX堂录播课、XX豌豆币（相等X堂课），连埋小朋友学习期间所有跟进服务同课后答疑都包埋，最终都系实实在在提升小朋友嘅思维能力。我帮你计返数，而家每堂先XX蚊多，一个月都系XXX蚊，真系超抵。一家人出街食一餐饭，就够宝贝一个月学费㗎啦，系咪呀？</div></div>'
+    +'<div class="card"><h2>💡 推单话术（理念+重要性 - 粤语）</h2><div class="script-block">当然啦，再平嘅嘢冇效果，都一定唔会买㗎。但思维学习呢样嘢，一定要持续学，因为思维能力培养会直接反映喺小朋友嘅学习度，提升佢嘅思维上限，进步空间先会无可限量。科技发展愈来愈快，而家好多行业、岗位，廿年后好大机会被AI取代消失，所以无论小朋友学咩范畴，唯有思维能力几时都唔会被淘汰，系终身受用嘅核心能力。</div></div>'
+    +'<div class="card"><h2>✍️ 报价话术实战练习</h2><p>场景：你刚完成学情反馈，果果妈妈问"有什么方案推荐？"。 请根据报价单，向果果妈妈编写一段报价话术（至少100字），要求覆盖：方案介绍、性价比说服、紧迫感营造、价值外化、理念升华。</p>'
+    +'<img src="assets/price_list.png" class="course-img" alt="报价单">'
+    +'<textarea id="ch5Textarea" class="practice-textarea" rows="8" placeholder="请输入你的报价话术（至少100字）...&#10;&#10;参考话术框架：&#10;1. 开场定位：告知剩余课时、当前进度、学完所需课时&#10;2. 方案介绍：列出2个方案（长期vs短期），包含课时数、价格、额外赠送、打卡福利、平均每节单价&#10;3. 理念升华：强调思维学习持续性，结合AI时代背景突出思维能力价值&#10;4. 收尾话术：用选择式提问引导家长做决定"></textarea>'
+    +'<div style="margin-top:8px;display:flex;gap:8px;align-items:center"><button class="btn" id="ch5SubmitBtn" onclick="submitCh5()">📝 提交评分</button><span id="ch5Warn" style="display:none;color:#DC2626;font-size:13px">⚠️ 请至少输入100字</span><span id="ch5Done" style="display:none;color:#059669;font-size:14px;font-weight:600">✅ 已提交</span><button class="btn btn-outline btn-sm" id="ch5ResetBtn" style="display:none" onclick="resetCh5()">🔄 重新编写</button></div>'
+    +'<div id="ch5ScorePanel" style="display:none;margin-top:12px;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px"><div style="font-size:14px;font-weight:600;margin-bottom:10px">📊 评分详情</div><div id="ch5ScoreDims"></div><div id="ch5ScoreTotal" style="text-align:center;padding:10px;border-radius:6px;font-size:15px;font-weight:700;margin-top:8px"></div></div>'
+    +'<div id="ch5RefPanel" class="ch3-ref-panel"><div class="highlight-box success"><strong>📋 参考话术：</strong><br>我们现在还剩余10课时，目前还可以学习多2个半月，如果是把S3级别学习完还需要40课时；如果妈妈想让孩子长期去学习，其实规划到S4也不算长，把S4学习完咱们是需要148课时。<br><br>所以根据小朋友的情况，给您规划了2个课程方案：<br>方案一：学完S4的课程，活动价格12688元，包含140的基础课时，额外赠送24课时，如果参与打卡活动，最多可得合计184课时，平均一节课68元。<br>方案二：学完S3的课程，活动价格4088元，包含40的基础课时，额外赠送6课时，如果参与打卡活动，最多可得合计51课时，平均一节课80元。<br><br>思维学习一定要持续，果果现在的数理思维正在快速提升期，坚持下去进步空间才不可限量。您看现在科技发展这么快，20年后很多岗位都可能被AI替代，但思维能力永远是最核心的本事，终身受用。为了果果的未来，这笔投资绝对值得！<br><br>妈妈您是更加倾向于学习到S3结束还是S4结束呢？</div></div></div>' },
+  { id:'s6', title:'异议处理实战', duration:'10-12分钟', icon:'6', type:'content_quiz', quizId:'quiz6',
+    content:'<div class="section-header"><span class="section-badge">第6章</span><h1>异议处理实战</h1><p class="duration">⏱ 学习时长：10-12分钟 | 📝 含3道测验题</p></div>'
+    +'<div class="card"><h2>🛡️ 异议处理四大核心方向</h2><div class="step-list">'
+    +'<div class="step-item"><div class="step-num-big">1</div><div class="step-content"><h4>理解共情，稳情绪</h4><p>对家长提出的异议表示充分理解，缓和对立情绪，建立信任基础，避免直接反驳导致沟通中断。</p></div></div>'
+    +'<div class="step-item"><div class="step-num-big">2</div><div class="step-content"><h4>辨真假，找根源</h4><p>通过提问确认异议真实性。如表面说"没时间"，实则是担心效果；表面说"价格贵"，实则是服务不满。</p></div></div>'
+    +'<div class="step-item"><div class="step-num-big">3</div><div class="step-content"><h4>针对性，给方案</h4><p>结合产品优势、课程体系、服务保障等，针对不同异议给出具体可落地的解决方案。</p></div></div>'
+    +'<div class="step-item"><div class="step-num-big">4</div><div class="step-content"><h4>强认知，促决策</h4><p>通过理念教育强化家长对思维培养的重视，结合优惠政策、学习连续性推动决策。</p></div></div></div></div>'
+    +'<div class="card"><h2>🔨 说服三板斧</h2><div class="tab-wrap"><button class="tab-btn active" onclick="switchTab(this,\'tab1\')">重要性</button><button class="tab-btn" onclick="switchTab(this,\'tab2\')">紧迫性</button><button class="tab-btn" onclick="switchTab(this,\'tab3\')">唯一性</button></div>'
+    +'<div class="tab-panel active" id="tab1"><h3>令家长认同「续费係必要嘅教育投入」</h3><p>核心逻辑：传递「思维培养嘅长期价值 + 课程学习嘅连续性价值 + 小朋友成长嘅关键期价值」。</p><ul><li>思维能力系终身能力，直接影响呈分试同面试</li><li>豌豆课程L1-L9系螺旋式进阶，完全贴合香港主流教材</li><li>学前到小学过渡阶段系香港升学嘅黄金准备期</li><li>现有学习嘅沉淀价值——续费巩固成果，放弃前功尽废</li></ul></div>'
+    +'<div class="tab-panel" id="tab2"><h3>令家长感知「而家续费系最佳时机」</h3><p>核心逻辑：透过「时间窗口限制 + 学习进度压力 + 优惠时效约束」，打破家长「再等等」嘅拖延心态。</p><ul><li>学习进度嘅时间压力：唔及时续费会导致学习中断</li><li>优惠政策嘅时效限制：而家离幼升小面试净系XX个月，错过呢段时间面试竞争力会少一截</li></ul></div>'
+    +'<div class="tab-panel" id="tab3"><h3>令家长相信「豌豆系不可替代嘅选择」</h3><p>核心逻辑：突出豌豆在课程、服务、师资、本地适配度嘅独特优势。</p><ul><li>课程产品独特性：粤语班+香港主流教材+超级飞侠IP+游戏化教学</li><li>服务保障独特性：3师伴学+专属学习群</li><li>师生适配独特性：小朋友已经习惯老师同课程模式，换机构要重新适应</li><li>优惠福利独特性：仅针对老学员嘅专属权益</li></ul></div></div>' },
+  { id:'s7', title:'终极考核', duration:'15-20分钟', icon:'🏆', type:'content', quizId:'',
+    content:'<div class="section-header"><span class="section-badge">第7章</span><h1>终极综合考核</h1><p class="duration">⏱ 学习时长：15-20分钟 | 🏆 AI 自由对话评分</p></div>'
+    +'<div class="card"><h2>🎓 终极考核：续费电话自由对话</h2><p>恭喜您来到最后一章！<strong>终极考核为自由对话模式</strong>，你将以 LP 身份与 AI 家长通话，系统会根据你的综合表现（流程、准确、亲和、覆盖）由 AI 评分官评分。建议覆盖 5-8 个话题流程后再结束通话。</p>'
+    +'<div class="highlight-box warning"><strong>场景：</strong>你是 LP，今日需要电话联系果果妈妈做续费沟通。果果（6岁男孩，香港，S3专题10）已学习约45节课，剩余10节。出勤100%，作业100%。活泼积极，爱跟小泡芙老师互动。计算基础较薄弱，好动，注意力有限。妈妈有二宝要照顾，平日很忙。<br><br>点击「开始通话」后，AI 家长将接通，你自由应对即可。</div></div>'
+    +'<div class="dialogue-container" id="finalDialogue">'
+    +'<div class="dialogue-header"><span>📞 续费电话自由对话</span><div class="dialogue-meta"><span class="badge badge-primary">🔄 对话轮数：<b id="finalRound">0</b></span><span class="badge badge-warning" id="finalTopicBadge">📍 当前话题：-</span></div></div>'
+    +'<div class="dialogue-messages" id="finalMessages"><div class="chat-msg system" style="justify-content:center"><div class="chat-bubble" style="background:#f8fafc;color:var(--text-secondary);max-width:90%;text-align:center">点击「开始通话」后，AI 家长将接通，对话将在此显示。</div></div></div>'
+    +'<div class="dialogue-input-area" id="finalInputArea"><input type="text" id="finalInput" placeholder="输入你的回复..." disabled onkeypress="if(event.key===\'Enter\')sendFinalMessage()"><button class="btn" id="finalSendBtn" onclick="sendFinalMessage()" disabled>发送</button></div></div>'
+    +'<div class="final-actions" style="margin-top:16px;display:flex;gap:12px;justify-content:center"><button class="btn btn-success final-call-btn" id="finalStartBtn" onclick="startFinalConversation()">📞 开始通话</button><button class="btn" id="finalEndBtn" onclick="endFinalConversation()" disabled>🛑 结束并评分</button><button class="btn btn-outline" onclick="resetFinalConversation()">🔄 重新开始</button></div>'
+    +'<div class="ai-feedback-panel" id="finalFeedback"></div>' }
+]};
+
+// Quiz data (non-dialogue chapters: 1,2,4,6)
+const quizzes = {
+  quiz1: { quizId:'quiz1', isDialogue:false, question:'请完成以下3道选择题，检验第1章的学习效果：', options:[], correct:-1 },
+  quiz2: { quizId:'quiz2', isDialogue:false, question:'请完成以下3道选择题，检验第2章的学习效果：', options:[], correct:-1 },
+  quiz4: { quizId:'quiz4', isDialogue:false, question:'请完成以下3道选择题，检验第4章的学习效果：', options:[], correct:-1 },
+  quiz6: { quizId:'quiz6', isDialogue:false, question:'请完成以下3道选择题，检验第6章异议处理的学习效果：', options:[], correct:-1 }
+};
+
+const chapterQuizzes = [
+  [ // ch1
+    { q:'续费课包生命周期以什么为划分节点？', opts:['以新签课包整体生命周期的 1/2 划分','以新签课包整体生命周期的 1/3 划分','以课程结束日期划分'], correct:1 },
+    { q:'以下哪个阶段的优惠力度最大？', opts:['早鸟期','升舱期','结课期'], correct:1 },
+    { q:'运营每月初提供的续费池名单包含哪些学员？', opts:['仅一续学员','一续至三续学员','所有在读学员'], correct:1 }
+  ],
+  [ // ch2
+    { q:'消费决策的本质是什么？', opts:['价格最低','品牌最好','性价比'], correct:2 },
+    { q:'续费沟通中"服务质量"维度强调什么？', opts:['课程价格最便宜','让家长感受到"想他所想，急他所需"','课包数量最多'], correct:1 },
+    { q:'在续费价格维度中，优惠应该呈现为什么形象？', opts:['随时都有，不限量','相对的、有限的、来之不易的','可以无限申请的'], correct:1 }
+  ],
+  [], // ch3 - no MC quiz (textarea practice)
+  [ // ch4
+    { q:'豌豆课程体系分为几个大阶段？', opts:['2个','3个','4个'], correct:1 },
+    { q:'S2阶段在豌豆体系中被称为什么期？', opts:['思维形成期','思维启蒙期','思维综合运用期'], correct:1 },
+    { q:'课程规划中需要几方配合来改善学习习惯？', opts:['仅班主任','班主任、老师、家长三方','仅家长'], correct:1 }
+  ],
+  [], // ch5 - no MC quiz (AI dialogue practice)
+  [ // ch6
+    { q:'异议处理的第一步应该是什么？', opts:['直接反驳家长的异议','立即给出折扣和优惠','理解共情，缓和对立情绪'], correct:2 },
+    { q:'家长说"价格太贵了，我想再考虑一下"，你应该如何挖掘真实顾虑？', opts:['直接说"这个价格已经很优惠了"','通过提问确认是总价超出预算还是单价不划算','直接给更低的折扣'], correct:1 },
+    { q:'以下哪项属于"唯一性"说服的核心逻辑？', opts:['告诉家长其他机构都不行','突出豌豆课程、服务、师资和本地适配度的独特优势','强调课程是最便宜的'], correct:1 }
+  ]
+];
+
+// ============================================================
+// State
+// ============================================================
+const LS_PREFIX = 'lp_renewal_v2';
+let currentSection = 0;
+let completedSections = new Set();
+let chapterQuizDone = [false,false,false,false,false,false,false];
+let chapterQuizAnswers = {}; // { 'chIdx_qi': { selected: oi, isCorrect: bool } }
+let ch3Submitted = false;
+let ch3Score = 0;
+let ch5Submitted = false; let ch5Score = 0;
+let finalTaskSubmitted = false; let finalScore = 0;
+let finalConversationStarted = false;
+let finalMessages = [];
+let finalRound = 0;
+let finalAiScoring = false;
+/* 培训成绩中心 AI 代理：API Key 只存服务端，课程页不再持有任何密钥 */
+const SC_LLM_URL = 'https://lp-theory-exam.app.workbuddy.host/api/sc/llm?sharecode=4R6NIRSM7B';
+const SC_COURSE_ID = 'lp-renewal-course';
+function scToken() { return (window.ScoreSDK && window.ScoreSDK.getToken) ? window.ScoreSDK.getToken() : ''; }
+function scLlmUrl() { return SC_LLM_URL + (SC_LLM_URL.includes('?') ? '&' : '?') + 'sc_token=' + encodeURIComponent(scToken()); }
+const LLM_API_URL = SC_LLM_URL;
+const LLM_MODEL = 'deepseek-chat';
+
+const FINAL_SYSTEM_PROMPT = `你係果果妈妈，香港家长，有一个6岁男孩叫果果，正在上豌豆思维 S3 专题10。今日有 LP（课程顾问）打电话畀你倾续费。请用自然粤语/港式中文回复，每次30-80字。
+
+果果背景：
+- 6岁男孩，香港，活泼好动，注意力唔太集中
+- 已学习约45节课，剩余10节课
+- 出勤率100%，作业完成率100%
+- 计算基础较薄弱，但课堂互动积极，喜欢小泡芙老师
+- 妈妈有二宝要照顾，平时好忙，周末都想休息
+
+你嘅性格：
+- 务实，关心价格同效果
+- 重视教育但都会考虑家庭经济
+- 时间紧张，唔喜欢被啰嗦
+- 会提出真实异议：价格、时间、效果、需要同家人商量、想对比其他机构
+- 会根据 LP 嘅表现逐渐被说服，但一开始唔会轻易答应报名
+
+对话规则：
+1. 只回复你说的话，唔好自我介绍或者复述场景
+2. 每回合回复要有信息量，唔可以只系"嗯""好""我再谂谂"
+3. 如果 LP 嘅话术让你唔舒服，你会表达抗拒或者冷淡
+4. 可能混合提出多个异议
+5. 如果 LP 清晰介绍咗方案，你会问具体价格/课时问题
+6. 唔好主动结束对话，等待 LP 推进
+
+开始场景：LP 打电话畀你，你接咗电话，请说第一句："喂，你好，请问边位？"`;
+let studySeconds = 0; let timerInterval = null;
+
+// ============================================================
+// Init
+// ============================================================
+function init() {
+  renderSidebar();
+  renderSections();
+  loadProgress();
+  setupFinalTaskListener();
+  startTimer();
+  loadNotes();
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = courseData.sections.map((s, i) => '\n    <div class="nav-section" data-index="'+i+'" onclick="navigateTo('+i+')">\n      <div class="nav-icon">'+s.icon+'</div><div class="nav-info"><div class="nav-label">'+s.title+'</div><div class="nav-sub">\u23f1 '+s.duration+'</div></div>\n    </div>').join('');
+  updateSidebarLocks();
+}
+
+function updateSidebarLocks() {
+  document.querySelectorAll('.nav-section').forEach((el, i) => {
+    const check = canNavigateTo(i);
+    if (!check.ok && i !== currentSection) el.classList.add('locked');
+    else el.classList.remove('locked');
+  });
+}
+
+function renderSections() {
+  const main = document.getElementById('mainContent');
+  main.innerHTML = courseData.sections.map((s, i) => '\n    <div class="section" data-section="'+i+'">\n      '+s.content+'\n      '+((s.type==='content_quiz' && i===0) ? renderChapterQuiz(0) : '')+'\n      '+((s.type==='content_quiz' && i===1) ? renderChapterQuiz(1) : '')+'\n      '+((s.type==='content_quiz' && i===3) ? renderChapterQuiz(3) : '')+'\n      '+((s.type==='content_quiz' && i===5) ? renderChapterQuiz(5) : '')+'\n      <div class="section-nav-buttons">\n        <div>'+(i>0 ? '<button class="btn btn-outline" onclick="navigateTo('+(i-1)+')">\u2190 上一章</button>' : '')+'</div>\n        <div>'+(i<6 ? '<button class="btn" onclick="markComplete('+i+');navigateTo('+(i+1)+')">下一章 \u2192</button>' : '<button class="btn btn-success" id="completeCourseBtn" onclick="tryCompleteCourse('+i+')">\u2713 完成课程</button>')+'</div>\n      </div>\n    </div>').join('');
+}
+
+function renderChapterQuiz(chIdx) {
+  const qs = chapterQuizzes[chIdx];
+  if (qs.length === 0) return '';
+  return '\n    <div class="card" style="border-top:4px solid var(--primary);">\n      <h2 style="margin-bottom:8px;">\ud83d\udcdd 章节测验（共'+qs.length+'题，全部答对方可进入下一章）</h2>\n      '+qs.map((q, qi) => '\n        <div class="quiz-card" id="chquiz-'+chIdx+'-'+qi+'">\n          <div class="quiz-question">Q'+(qi+1)+'\uff1a'+q.q+'</div>\n          <div class="quiz-options">'+q.opts.map((opt, oi) => '\n            <div class="quiz-option" data-option="'+oi+'" onclick="selectChQuizOption(this,'+oi+','+chIdx+','+qi+')">\n              <span class="quiz-option-label">'+String.fromCharCode(65+oi)+'</span><span>'+opt+'</span>\n            </div>').join('')+'</div>\n          <div class="quiz-feedback" id="feedback-chquiz-'+chIdx+'-'+qi+'"></div>\n        </div>').join('')+'\n        <div style="text-align:center;margin-top:8px;padding:12px;background:'+(chapterQuizDone[chIdx]?'#ecfdf5':'#f8fafc')+';border-radius:8px;font-size:14px;">\n          '+(chapterQuizDone[chIdx] ? '<span style="color:#065f46;font-weight:600;">\u2705 本章测验已全部通过！</span>' : '<span style="color:#64748b;">\ud83d\udccb 请回答所有题目（答错可以重做）</span>')+'\n        </div>\n    </div>';
+}
+
+// ============================================================
+// Quiz
+// ============================================================
+function selectChQuizOption(el, oi, chIdx, qi) {
+  const card = document.getElementById('chquiz-'+chIdx+'-'+qi);
+  if (card.dataset.answered === 'true') return;
+  const q = chapterQuizzes[chIdx][qi];
+  const isCorrect = oi === q.correct;
+  card.querySelectorAll('.quiz-option').forEach(b => {
+    const optIdx = parseInt(b.dataset.option);
+    b.style.pointerEvents = 'none';
+    if (optIdx === q.correct) b.classList.add('correct');
+    else if (optIdx === oi && !isCorrect) b.classList.add('wrong');
+    else b.classList.add('disabled');
+  });
+  const fb = document.getElementById('feedback-chquiz-'+chIdx+'-'+qi);
+  if (isCorrect) {
+    fb.innerHTML = '\u2705 回答正确！';
+    fb.classList.add('show', 'correct');
+  } else {
+    fb.innerHTML = '\u274c 回答错误，正确答案是 <strong style="color:#991b1b;">'+String.fromCharCode(65+q.correct)+'</strong>。<button class="btn btn-outline" style="margin-left:8px;font-size:12px;padding:4px 12px;vertical-align:middle" onclick="resetChapterQuiz('+chIdx+','+qi+')">\u91cd\u65b0\u4f5c\u7b54</button>';
+    fb.classList.add('show', 'wrong');
+    card.style.borderColor = 'var(--danger)';
+  }
+  card.dataset.answered = 'true';
+  chapterQuizAnswers[chIdx + '_' + qi] = { selected: oi, isCorrect: isCorrect };
+  checkChapterQuizComplete(chIdx);
+}
+function resetChapterQuiz(chIdx, qi) {
+  const card = document.getElementById('chquiz-'+chIdx+'-'+qi);
+  card.dataset.answered = 'false';
+  card.querySelectorAll('.quiz-option').forEach(b => {
+    b.classList.remove('correct','wrong','disabled');
+    b.style.pointerEvents = '';
+  });
+  card.style.borderColor = '';
+  const fb = document.getElementById('feedback-chquiz-'+chIdx+'-'+qi);
+  fb.classList.remove('show','correct','wrong');
+  fb.textContent = '';
+}
+function checkChapterQuizComplete(chIdx) {
+  if (chapterQuizDone[chIdx]) return;
+  const qs = chapterQuizzes[chIdx];
+  if (qs.length === 0) return;
+  const allCorrect = qs.every((q, qi) => {
+    const card = document.getElementById('chquiz-'+chIdx+'-'+qi);
+    return card && card.dataset.answered === 'true' && !card.querySelector('.quiz-option.wrong');
+  });
+  if (allCorrect) {
+    chapterQuizDone[chIdx] = true;
+    showToast('\ud83c\udf89 第'+(chIdx+1)+'章测验全部通过！', 'success');
+    updateSidebarLocks();
+    saveProgress();
+    renderSections();
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const section = document.querySelector('.section[data-section="'+chIdx+'"]');
+    if (section) section.classList.add('active');
+    setupFinalTaskListener();
+  }
+}
+
+// ============================================================
+// Chapter 3 - Textarea Practice
+// ============================================================
+function submitCh3() {
+  const text = document.getElementById('ch3Textarea').value.trim();
+  if (text.length < 50) {
+    document.getElementById('ch3Warn').style.display = 'inline';
+    return;
+  }
+  document.getElementById('ch3Warn').style.display = 'none';
+
+  // 5-dimension keyword scoring: 2pts per match, capped at max
+  const dims = [
+    { name:'知识内容覆盖', max:20, keywords:['S3','专题','10','进步','内容','知识','学习','掌握','运用','理解','抽象','逻辑','数理','思维','方法','能力','解决','问题','提升','明显','反馈','分享','情况','近期','非常','难度','帮助','变化','经过','接触'] },
+    { name:'学习习惯描述', max:20, keywords:['出勤','作业','请假','补课','100%','闭环','习惯','完成率','及时','主动','非常好','完整','全部','率','出勤率','坚持','认真','按时','学习习惯','每次','节','课'] },
+    { name:'课堂表现反馈', max:20, keywords:['活泼','积极','大胆','发言','互动','老师','配合','好动','注意力','有限','小泡芙','表现','默契','课堂','喜欢','很','上课','参与','表达','回答问题','举手','鼓励'] },
+    { name:'效果外化展示', max:20, keywords:['妈妈','陪伴','投入','进步','成长','提升','明显','状态','越来越好','分享','一直','平时','让','希望','看到','见证','效果','感受','知道','高兴','欣慰','变化'] },
+    { name:'待提升+后续引导', max:20, keywords:['计算','基础','薄弱','巩固','提升','改进','后续','课程','规划','继续','扎实','建议','考虑','衔接','阶段','关键','重点','帮助','加强','学习规划','接下来','一鼓作气'] }
+  ];
+
+  let totalScore = 0;
+  let dimResults = [];
+  const t = text.toLowerCase();
+
+  dims.forEach((dim, di) => {
+    let matched = dim.keywords.filter(k => t.includes(k));
+    let score = Math.min(dim.max, matched.length * 2);
+    totalScore += score;
+    dimResults.push({ name:dim.name, score:score, max:dim.max, matched:matched.slice(0,5) });
+  });
+
+  ch3Score = totalScore;
+
+  // show score panel
+  const dimsContainer = document.getElementById('ch3ScoreDims');
+  dimsContainer.innerHTML = dimResults.map((d,i) => {
+    const pct = Math.round(d.score/d.max*100);
+    const color = pct >= 75 ? '#059669' : pct >= 40 ? '#D97706' : '#DC2626';
+    const barColor = pct >= 75 ? '#059669' : pct >= 40 ? '#D97706' : '#DC2626';
+    return '<div style="margin-bottom:12px">' +
+      '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">' +
+      '<span style="font-weight:600">' + (i+1) + '. ' + d.name + '</span>' +
+      '<span style="color:' + color + ';font-weight:700">' + d.score + '/' + d.max + '</span></div>' +
+      '<div style="height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden">' +
+      '<div style="height:100%;width:' + pct + '%;background:' + barColor + ';border-radius:3px;transition:width .5s"></div></div>' +
+      '<div style="font-size:11px;color:#94a3b8;margin-top:2px">匹配关键词：' + (d.matched.length ? d.matched.join('、') : '未匹配到') + '</div></div>';
+  }).join('');
+
+  const totalEl = document.getElementById('ch3ScoreTotal');
+  const passed = totalScore >= 60;
+  totalEl.style.background = passed ? '#ecfdf5' : '#fef2f2';
+  totalEl.style.color = passed ? '#065f46' : '#991b1b';
+  totalEl.innerHTML = passed
+    ? '✅ 总分 ' + totalScore + ' / 100（通过，≥60分）'
+    : '❌ 总分 ' + totalScore + ' / 100（未通过，需≥60分才可进入下一章，请参考话术修改后重新提交）';
+
+  document.getElementById('ch3ScorePanel').style.display = 'block';
+  document.getElementById('ch3RefPanel').classList.add('show');
+  document.getElementById('ch3Textarea').disabled = true;
+  document.getElementById('ch3SubmitBtn').style.display = 'none';
+  document.getElementById('ch3Done').style.display = 'inline';
+  document.getElementById('ch3ResetBtn').style.display = 'inline';
+  ch3Submitted = true;
+  saveProgress();
+  showToast('\u2705 得分: ' + totalScore + '/100' + (passed ? ' — 通过！' : ' — 未通过，请修改后重试'), passed ? 'success' : 'warning');
+}
+function resetCh3() {
+  document.getElementById('ch3Textarea').value = '';
+  document.getElementById('ch3Textarea').disabled = false;
+  document.getElementById('ch3RefPanel').classList.remove('show');
+  document.getElementById('ch3ScorePanel').style.display = 'none';
+  document.getElementById('ch3SubmitBtn').style.display = 'inline';
+  document.getElementById('ch3Done').style.display = 'none';
+  document.getElementById('ch3ResetBtn').style.display = 'none';
+  ch3Submitted = false;
+  ch3Score = 0;
+  saveProgress();
+}
+
+// ============================================================
+// Chapter 5 - Quote Script Submission + Keyword Scoring
+// ============================================================
+function submitCh5() {
+  const text = document.getElementById('ch5Textarea').value.trim();
+  if (text.length < 100) {
+    document.getElementById('ch5Warn').style.display = 'inline';
+    return;
+  }
+  document.getElementById('ch5Warn').style.display = 'none';
+
+  const t = text;
+  const dims = [
+    { name:'方案介绍清晰', max:20, keywords:['方案','课时','长期','40','80','110','4088','7288','12688','S3','S4','学到','结束','需要','平均','规划','剩余','级别','学习完','148','包含','含','基础课时','活动价格','还有','推荐','根据','情况','给','每节课','一节课','一共','总共','系统'] },
+    { name:'性价比说服', max:20, keywords:['活动','价格','平均','额外','赠送','更','倾向','方案一','方案二','一节课','节','合计','打卡','元','68','80','基础课时','对比','优惠','节省','划算','更多','活动价','选择','每节课','便宜','折扣','申请'] },
+    { name:'紧迫性营造', max:20, keywords:['现在','目前','剩余','还有','活动','打卡','赠送','额外','额外赠送','合计','可得','最多','不可限量','快速','提升期','进步','下去','更','更加','倾向','选择','学习完','持续','坚持','提升','抓紧','尽快'] },
+    { name:'价值外化', max:20, keywords:['学习','提升','进步','赠送','额外','课时','打卡','活动','合计','值得','投资','不可限量','未来','基础','数理','课程','持续','平均','方案','规划','绝对','受用','核心','本事','终身','一节课','节','提升期','价值'] },
+    { name:'理念升华', max:20, keywords:['思维','能力','持续','坚持','长期','投资','未来','核心','终身','受用','AI','替代','基础','数理','发展','本事','值得','绝对','不可限量','进步','提升','快速','潜力','长远','培养','逻辑','创造'] }
+  ];
+  let totalScore = 0;
+  const dimResults = [];
+
+  dims.forEach(dim => {
+    let matched = dim.keywords.filter(kw => t.includes(kw));
+    let score = Math.min(dim.max, matched.length * 2);
+    totalScore += score;
+    const pct = Math.round(score / dim.max * 100);
+    dimResults.push({ ...dim, score, matched, pct });
+  });
+
+  ch5Submitted = true;
+  ch5Score = totalScore;
+
+  const dimsContainer = document.getElementById('ch5ScoreDims');
+  const barColor = totalScore >= 60 ? '#059669' : '#DC2626';
+  dimsContainer.innerHTML = dimResults.map((d, i) => {
+    const dots = d.matched.length > 0 ? d.matched.slice(0,6).join('\u3001')+(d.matched.length>6?'\u2026':'') : '\uff08\u65e0\u5339\u914d\uff09';
+    return '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:600">'+(i+1)+'. '+d.name+'</span><span style="color:'+barColor+';font-weight:700">'+d.score+' / '+d.max+'</span></div><div style="height:6px;background:#E2E8F0;border-radius:3px"><div style="height:100%;width:'+d.pct+'%;background:'+barColor+';border-radius:3px"></div></div><div style="font-size:11px;color:#94A3B8;margin-top:2px">\u5339\u914d\u5173\u952e\u8bcd\uff1a'+dots+'</div></div>';
+  }).join('');
+  const totalEl = document.getElementById('ch5ScoreTotal');
+  const passed = totalScore >= 60;
+  totalEl.style.background = passed ? '#ecfdf5' : '#fef2f2';
+  totalEl.style.color = passed ? '#065f46' : '#991b1b';
+  totalEl.innerHTML = passed ? '\u2705 \u603b\u5206 ' + totalScore + ' / 100\uff08\u901a\u8fc7\uff09' : '\u274c \u603b\u5206 ' + totalScore + ' / 100\uff08\u672a\u901a\u8fc7\uff0c\u9700\u226560\u5206\uff0c\u8bf7\u4fee\u6539\u540e\u91cd\u65b0\u63d0\u4ea4\uff09';
+
+  document.getElementById('ch5ScorePanel').style.display = 'block';
+  document.getElementById('ch5RefPanel').classList.add('show');
+  document.getElementById('ch5Textarea').disabled = true;
+  document.getElementById('ch5Done').style.display = 'inline';
+  document.getElementById('ch5ResetBtn').style.display = 'inline';
+  hideElement('ch5SubmitBtn');
+
+  saveProgress();
+  if (passed) {
+    showToast('\u2705 \u62a5\u4ef7\u8bdd\u672f\u5f97\u5206 ' + totalScore + ' \u5206\uff0c\u901a\u8fc7\uff01\u7b2c6\u7ae0\u5df2\u89e3\u9501', 'success');
+  } else {
+    showToast('\u274c \u5f97\u5206 ' + totalScore + ' \u5206\uff0c\u672a\u8fbe60\u5206\uff0c\u8bf7\u4fee\u6539\u540e\u91cd\u65b0\u63d0\u4ea4', 'error');
+  }
+}
+
+function resetCh5() {
+  ch5Submitted = false;
+  ch5Score = 0;
+  document.getElementById('ch5Textarea').value = '';
+  document.getElementById('ch5Textarea').disabled = false;
+  document.getElementById('ch5ScorePanel').style.display = 'none';
+  document.getElementById('ch5RefPanel').classList.remove('show');
+  document.getElementById('ch5Done').style.display = 'none';
+  document.getElementById('ch5ResetBtn').style.display = 'none';
+  document.getElementById('ch5Warn').style.display = 'none';
+  document.getElementById('ch5SubmitBtn').style.display = 'inline';
+  saveProgress();
+}
+
+function hideElement(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+
+// ============================================================
+// Navigation
+// ============================================================
+function canNavigateTo(index) {
+  if (index === 0) return { ok: true };
+  // ch1 (index 1) requires ch1 quiz done
+  if (index >= 1 && !chapterQuizDone[0]) return { ok: false, msg: '\u8bf7\u5148\u5b8c\u6210\u7b2c1\u7ae0\u7684\u6240\u6709\u6d4b\u9a8c\u9898\uff08\u5168\u90e8\u7b54\u5bf9\uff09' };
+  // ch2 (index 2) requires ch2 quiz done
+  if (index >= 2 && !chapterQuizDone[1]) return { ok: false, msg: '\u8bf7\u5148\u5b8c\u6210\u7b2c2\u7ae0\u7684\u6240\u6709\u6d4b\u9a8c\u9898\uff08\u5168\u90e8\u7b54\u5bf9\uff09' };
+  // ch4 (index 3) requires ch2 done + ch3 submitted
+  if (index >= 3 && !ch3Submitted) return { ok: false, msg: '\u8bf7\u5148\u5b8c\u6210\u7b2c3\u7ae0\u7684\u5b66\u60c5\u53cd\u9988\u8bdd\u672f\u7f16\u5199\u5e76\u63d0\u4ea4' };
+  if (index >= 3 && ch3Score < 60) return { ok: false, msg: '\u7b2c3\u7ae0\u5b66\u60c5\u53cd\u9988\u5f97\u5206' + ch3Score + '\u5206\uff0c\u9700\u226560\u5206\u624d\u80fd\u8fdb\u5165\u4e0b\u4e00\u7ae0\uff0c\u8bf7\u91cd\u65b0\u4fee\u6539\u540e\u63d0\u4ea4' };
+  // ch5 (index 4) requires ch4 quiz done
+  if (index >= 4 && !chapterQuizDone[3]) return { ok: false, msg: '\u8bf7\u5148\u5b8c\u6210\u7b2c4\u7ae0\u7684\u6240\u6709\u6d4b\u9a8c\u9898\uff08\u5168\u90e8\u7b54\u5bf9\uff09' };
+  // ch6 (index 5) requires ch5 submitted with score >= 60
+  if (index >= 5 && (!ch5Submitted || ch5Score < 60)) return { ok: false, msg: '\u8bf7\u5148\u5b8c\u6210\u7b2c5\u7ae0\u7684\u62a5\u4ef7\u8bdd\u672f\u7f16\u5199\uff0c\u5f97\u5206\u226560\u5206\u624d\u80fd\u8fdb\u5165\u4e0b\u4e00\u7ae0' };
+  // ch7 (index 6) requires ch6 quiz done
+  if (index >= 6 && !chapterQuizDone[5]) return { ok: false, msg: '\u8bf7\u5148\u5b8c\u6210\u7b2c6\u7ae0\u7684\u6240\u6709\u6d4b\u9a8c\u9898\uff08\u5168\u90e8\u7b54\u5bf9\uff09' };
+  return { ok: true };
+}
+
+function navigateTo(index) {
+  const check = canNavigateTo(index);
+  if (!check.ok) { showToast('\ud83d\udd12 '+check.msg, 'warning'); return; }
+  currentSection = index;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-section').forEach(n => n.classList.remove('active'));
+  const section = document.querySelector('.section[data-section="'+index+'"]');
+  if (section) section.classList.add('active');
+  const navItem = document.querySelector('.nav-section[data-index="'+index+'"]');
+  if (navItem) navItem.classList.add('active');
+  updateProgress(); updateNotesForSection(index); saveProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+  const mhTitle = document.getElementById('mhTitle');
+  if (mhTitle) mhTitle.textContent = courseData.sections[index].title;
+}
+
+function markComplete(index) {
+  completedSections.add(index);
+  updateProgress(); saveProgress();
+  showToast('\u300c'+courseData.sections[index].title+'\u300d\u5df2\u5b8c\u6210 \u2713', 'success');
+  checkCertificate();
+}
+
+function tryCompleteCourse(index) {
+  if (!finalTaskSubmitted) { showToast('\u8bf7\u5148\u5b8c\u6210\u7ec8\u6781\u8003\u6838\u5e76\u63d0\u4ea4\u7b54\u6848', 'warning'); return; }
+  if (finalScore < 60) { showToast('\u7ec8\u6781\u8003\u6838\u5f97\u5206\u672a\u8fbe60\u5206\uff08\u5f53\u524d'+finalScore+'\u5206\uff09\uff0c\u8bf7\u91cd\u65b0\u4f5c\u7b54', 'warning'); return; }
+  markComplete(index);
+}
+
+function updateProgress() {
+  const total = courseData.sections.length;
+  const viewed = new Set([...completedSections, currentSection]);
+  const pct = Math.round((viewed.size / total) * 100);
+  document.getElementById('progressPercent').textContent = pct+'%';
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.querySelectorAll('.nav-section').forEach((el, i) => { if (completedSections.has(i)) el.classList.add('completed'); });
+}
+
+// ============================================================
+// Final Task (Chapter 7)
+// ============================================================
+function setupFinalTaskListener() {
+  // No-op: final exam is now AI dialogue, not textarea
+}
+
+// ============================================================
+// Final Task (Chapter 7) - DeepSeek LLM free dialogue
+// ============================================================
+const RATE_LIMIT_KEY = 'llm_rate_ts';
+const RATE_LIMIT_MAX = 100;
+const RATE_LIMIT_WINDOW = 3600000; // 1 hour in ms
+function checkRateLimit() {
+  const now = Date.now();
+  let ts = [];
+  try { ts = JSON.parse(localStorage.getItem(RATE_LIMIT_KEY) || '[]'); } catch(e) { ts = []; }
+  ts = ts.filter(t => now - t < RATE_LIMIT_WINDOW);
+  if (ts.length >= RATE_LIMIT_MAX) {
+    const oldest = ts[0];
+    const resetIn = Math.ceil((oldest + RATE_LIMIT_WINDOW - now) / 60000);
+    throw new Error('API 调用已达上限（' + RATE_LIMIT_MAX + '次/小时），约 ' + resetIn + ' 分钟后恢复。');
+  }
+  ts.push(now);
+  localStorage.setItem(RATE_LIMIT_KEY, JSON.stringify(ts));
+  return ts.length;
+}
+async function callLLM(messages, options = {}) {
+  const { maxTokens = 500, temperature = 0.7, jsonMode = false } = options;
+  try {
+    checkRateLimit();
+    const res = await fetch(scLlmUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-SC-Token': scToken(), 'X-Auth-Token': scToken() },
+      body: JSON.stringify({
+        model: LLM_MODEL,
+        messages,
+        max_tokens: maxTokens,
+        temperature,
+        response_format: jsonMode ? { type: 'json_object' } : undefined,
+        courseId: SC_COURSE_ID
+      })
+    });
+    if (!res.ok) {
+      let err = 'AI 服务异常 (' + res.status + ')';
+      try { const j = await res.json(); err = j.error?.message || j.message || err; } catch(e) {}
+      throw new Error(err);
+    }
+    return await res.json();
+  } catch (e) { throw e; }
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function renderFinalMessage(role, text) {
+  const container = document.getElementById('finalMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (role === 'lp' ? 'lp' : 'parent');
+  const label = role === 'lp' ? '课程顾问 · LP' : '果果妈妈';
+  const avatar = role === 'lp' ? 'LP' : '妈';
+  div.innerHTML = '<div class="chat-avatar">' + avatar + '</div><div class="chat-content"><div class="chat-label">' + label + '</div><div class="chat-bubble">' + escapeHtml(text) + '</div></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showFinalTyping(show) {
+  let el = document.getElementById('finalTyping');
+  if (!show) { if (el) el.remove(); return; }
+  if (el) return;
+  const container = document.getElementById('finalMessages');
+  el = document.createElement('div');
+  el.id = 'finalTyping';
+  el.className = 'chat-msg parent';
+  el.innerHTML = '<div class="chat-avatar">妈</div><div class="chat-content"><div class="chat-label">果果妈妈</div><div class="typing-indicator"><span></span><span></span><span></span></div></div>';
+  container.appendChild(el);
+  container.scrollTop = container.scrollHeight;
+}
+
+function updateFinalTopic() {
+  const lastAi = finalMessages.filter(m => m.role === 'assistant').pop();
+  const lastText = lastAi ? lastAi.content : '';
+  const topics = [
+    { name: '学情反馈', kw: ['进步','学习','专题','出勤','作业','课堂','表现','活泼','积极','互动'] },
+    { name: '课程规划', kw: ['规划','S3','S4','阶段','关键期','衔接','体系','进阶','级别'] },
+    { name: '课包方案', kw: ['方案','课时','课包','价格','12688','4088','40','148','184','68','80'] },
+    { name: '性价比', kw: ['优惠','折扣','便宜','划算','平均','每节','赠送','额外','省钱'] },
+    { name: '异议处理', kw: ['考虑','预算','时间','忙','效果','担心','贵','对比','商量','再谂'] },
+    { name: '推单成交', kw: ['报名','确定','今日','现在','马上','落单','付费','投资','值得','未来'] }
+  ];
+  let topic = '开场寒暄';
+  for (let t of topics) {
+    if (t.kw.some(k => lastText.includes(k))) { topic = t.name; break; }
+  }
+  document.getElementById('finalTopicBadge').textContent = '📍 当前话题：' + topic;
+  return topic;
+}
+
+function getFinalFallbackReply(userText) {
+  const t = userText.toLowerCase();
+  if (t.includes('价格') || t.includes('优惠') || t.includes('几多钱') || t.includes('元')) return '价格确实系我哋好关心嘅。你哋呢个方案最平可以去到几钱？我哋而家供楼紧，压力唔细。';
+  if (t.includes('时间') || t.includes('安排') || t.includes('周末') || t.includes('忙')) return '我周末要睇二宝，时间好紧张。如果续费，上课时间系咪可以灵活啲？';
+  if (t.includes('效果') || t.includes('进步') || t.includes('基础') || t.includes('计算')) return '果果计算基础都仲弱，我惊再续费都系咁，咁样嘅话有咩保证？';
+  if (t.includes('对比') || t.includes('其他') || t.includes('机构')) return '我朋友个仔去咗另一间学思维，价钱平过你哋，我都要对比下。';
+  if (t.includes('报名') || t.includes('买') || t.includes('确定')) return '好啦，咁我哋试下，点样报名？';
+  return '嗯，我了解咗。不过呢件事我要同家人商量下，你哋可以再畀啲资料我咩？';
+}
+
+async function startFinalConversation() {
+  if (finalConversationStarted || finalAiScoring) return;
+  finalConversationStarted = true;
+  finalMessages = [{ role: 'system', content: FINAL_SYSTEM_PROMPT }];
+  finalRound = 0;
+  document.getElementById('finalStartBtn').disabled = true;
+  document.getElementById('finalInput').disabled = false;
+  document.getElementById('finalInput').focus();
+  document.getElementById('finalSendBtn').disabled = false;
+  document.getElementById('finalEndBtn').disabled = false;
+
+  document.getElementById('finalMessages').innerHTML = '';
+  showFinalTyping(true);
+
+  try {
+    const data = await callLLM(finalMessages, { maxTokens: 200, temperature: 0.75 });
+    const reply = data.choices?.[0]?.message?.content?.trim() || '喂，你好，请问边位？';
+    finalMessages.push({ role: 'assistant', content: reply });
+    renderFinalMessage('parent', reply);
+    updateFinalTopic();
+  } catch (e) {
+    const fallback = '喂，你好，请问边位？';
+    finalMessages.push({ role: 'assistant', content: fallback });
+    renderFinalMessage('parent', fallback);
+    console.warn('AI 接通失败，使用默认开场:', e.message);
+  } finally {
+    showFinalTyping(false);
+  }
+  saveProgress();
+}
+
+async function sendFinalMessage() {
+  if (!finalConversationStarted || finalAiScoring || finalTaskSubmitted) return;
+  const input = document.getElementById('finalInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  renderFinalMessage('lp', text);
+  finalMessages.push({ role: 'user', content: text });
+  finalRound++;
+  document.getElementById('finalRound').textContent = finalRound;
+  document.getElementById('finalInput').disabled = true;
+  document.getElementById('finalSendBtn').disabled = true;
+  showFinalTyping(true);
+
+  try {
+    const data = await callLLM(finalMessages, { maxTokens: 200, temperature: 0.75 });
+    const reply = data.choices?.[0]?.message?.content?.trim() || getFinalFallbackReply(text);
+    finalMessages.push({ role: 'assistant', content: reply });
+    renderFinalMessage('parent', reply);
+    updateFinalTopic();
+  } catch (e) {
+    const fallback = getFinalFallbackReply(text);
+    finalMessages.push({ role: 'assistant', content: fallback });
+    renderFinalMessage('parent', fallback);
+    showToast('AI 服务暂时不可用，已切换为脚本模拟回复', 'warning');
+  } finally {
+    showFinalTyping(false);
+    document.getElementById('finalInput').disabled = false;
+    document.getElementById('finalSendBtn').disabled = false;
+    document.getElementById('finalInput').focus();
+  }
+  saveProgress();
+}
+
+async function endFinalConversation() {
+  if (!finalConversationStarted || finalAiScoring || finalTaskSubmitted) return;
+  if (finalRound < 3) {
+    showToast('请至少完成 3 轮对话再结束评分', 'warning');
+    return;
+  }
+  finalAiScoring = true;
+  document.getElementById('finalInput').disabled = true;
+  document.getElementById('finalSendBtn').disabled = true;
+  document.getElementById('finalEndBtn').disabled = true;
+  showToast('正在调用 AI 评分官...', 'success');
+  await scoreFinalConversation();
+}
+
+async function scoreFinalConversation() {
+  const dialogue = finalMessages.filter(m => m.role === 'user' || m.role === 'assistant')
+    .map((m) => (m.role === 'user' ? 'LP' : '果果妈妈') + '：' + m.content).join('\n');
+  const scoringPrompt = `你是一位资深 LP 培训评分官。请根据以下 LP 与果果妈妈的续费电话对话，从四个维度进行评分（满分100）：
+1. 流程完整性（25分）：是否自然覆盖学情反馈、课程规划、课包方案介绍、推单说服、异议处理、成交收尾等流程；
+2. 信息准确性（25分）：提到的课时、价格、方案等数据是否合理，是否避免事实错误；
+3. 亲和度（25分）：语气是否自然、有共情，是否贴合香港家长语境，称呼和表达是否得体；
+4. 覆盖度（25分）：是否回应了家长提出的主要异议（价格/时间/效果/对比/家人商量等）。
+
+请只返回如下 JSON 格式，不要有任何其他文字：
+{"score": 80, "breakdown": {"流程": 20, "准确": 20, "亲和": 20, "覆盖": 20}, "feedback": "简要点评（50-120字）"}
+
+对话记录：
+${dialogue}`;
+  try {
+    const data = await callLLM([
+      { role: 'system', content: 'You are a strict but fair evaluator. Always respond in valid JSON only.' },
+      { role: 'user', content: scoringPrompt }
+    ], { maxTokens: 800, temperature: 0.3, jsonMode: true });
+    const raw = data.choices?.[0]?.message?.content?.trim() || '{}';
+    let result = {};
+    try { result = JSON.parse(raw); } catch(e) { result = {}; }
+    finalScore = Math.min(100, Math.max(0, parseInt(result.score, 10) || 60));
+    const breakdown = result.breakdown || { 流程: 15, 准确: 15, 亲和: 15, 覆盖: 15 };
+    const feedback = result.feedback || '已完成考核，请查看综合评分。';
+    renderFinalScore(finalScore, breakdown, feedback);
+  } catch (e) {
+    console.error('AI 评分失败:', e);
+    finalScore = 60;
+    renderFinalScore(60, { 流程: 15, 准确: 15, 亲和: 15, 覆盖: 15 }, 'AI 评分服务暂时不可用，已按保底分处理。建议刷新后重试或联系管理员。');
+  } finally {
+    finalAiScoring = false;
+    finalTaskSubmitted = true;
+  /* 培训成绩中心：终极考核成绩上报（不改变原有判分、进度与证书逻辑） */
+  if (window.ScoreSDK) {
+    ScoreSDK.report({
+      score: finalScore,
+      maxScore: 100,
+      passed: finalScore >= 60,
+      detail: { mode: 'ai-dialogue-scoring', rounds: (typeof finalRound !== 'undefined' ? finalRound : 0), textLength: (typeof text !== 'undefined' ? text.length : 0) },
+      answers: (typeof finalMessages !== 'undefined' ? finalMessages.slice(-20) : []),
+      durationSec: (typeof studySeconds !== 'undefined' ? studySeconds : 0)
+    });
+  }
+
+    saveProgress();
+    updateSidebarLocks();
+    checkCertificate();
+  }
+}
+
+function renderFinalScore(score, breakdown, feedback) {
+  const level = score >= 80 ? 'high' : score >= 60 ? 'medium' : 'low';
+  const levelText = score >= 80 ? '优秀！话术全面，流程完整。' : score >= 60 ? '良好！基本完成续费沟通。' : '需要更多练习，建议回顾课程内容后再试。';
+  const fb = document.getElementById('finalFeedback');
+  fb.innerHTML = '<div class="score-display"><div class="score-circle ' + level + '">' + score + '</div><div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">综合评分</div></div>'
+    + '<p style="text-align:center;font-size:14px;margin-bottom:16px;font-weight:600;">' + levelText + '</p>'
+    + '<div class="final-score-grid"><div class="final-score-card"><div class="score">' + (breakdown['流程'] || 0) + '</div><div class="label">流程完整性</div></div><div class="final-score-card"><div class="score">' + (breakdown['准确'] || 0) + '</div><div class="label">信息准确性</div></div><div class="final-score-card"><div class="score">' + (breakdown['亲和'] || 0) + '</div><div class="label">亲和度</div></div><div class="final-score-card"><div class="score">' + (breakdown['覆盖'] || 0) + '</div><div class="label">覆盖度</div></div></div>'
+    + '<div class="final-feedback-text"><strong>AI 评分官点评：</strong><br>' + feedback + '</div>'
+    + (score >= 60 ? '<div style="margin-top:16px;padding:14px;background:#ecfdf5;border-radius:8px;font-size:14px;color:#065f46;text-align:center;"><strong>✅ 考核通过！</strong> 终极考核得分达60分以上，可以领取结业证书。</div>' : '<div style="margin-top:16px;padding:14px;background:#fef2f2;border-radius:8px;font-size:14px;color:#991b1b;text-align:center;"><strong>📖 未通过。</strong> 得分不足60分，请点击"重新开始"后再试。</div>');
+  fb.classList.add('show');
+}
+
+function resetFinalConversation() {
+  finalConversationStarted = false;
+  finalTaskSubmitted = false;
+  finalScore = 0;
+  finalRound = 0;
+  finalMessages = [];
+  finalAiScoring = false;
+  document.getElementById('finalMessages').innerHTML = '<div class="chat-msg system" style="justify-content:center"><div class="chat-bubble" style="background:#f8fafc;color:var(--text-secondary);max-width:90%;text-align:center">点击「开始通话」后，AI 家长将接通，对话将在此显示。</div></div>';
+  document.getElementById('finalInput').value = '';
+  document.getElementById('finalInput').disabled = true;
+  document.getElementById('finalSendBtn').disabled = true;
+  document.getElementById('finalEndBtn').disabled = true;
+  document.getElementById('finalStartBtn').disabled = false;
+  document.getElementById('finalRound').textContent = '0';
+  document.getElementById('finalTopicBadge').textContent = '📍 当前话题：-';
+  document.getElementById('finalFeedback').classList.remove('show');
+  document.getElementById('finalFeedback').innerHTML = '';
+  updateSidebarLocks(); saveProgress();
+}
+
+function restoreFinalConversation() {
+  if (!finalConversationStarted) return;
+  const container = document.getElementById('finalMessages');
+  container.innerHTML = '';
+  finalMessages.forEach(m => {
+    if (m.role === 'system') return;
+    if (m.role === 'user') renderFinalMessage('lp', m.content);
+    if (m.role === 'assistant') renderFinalMessage('parent', m.content);
+  });
+  document.getElementById('finalRound').textContent = finalRound;
+  updateFinalTopic();
+  if (finalTaskSubmitted) {
+    document.getElementById('finalInput').disabled = true;
+    document.getElementById('finalSendBtn').disabled = true;
+    document.getElementById('finalEndBtn').disabled = true;
+    document.getElementById('finalStartBtn').disabled = true;
+  } else {
+    document.getElementById('finalStartBtn').disabled = true;
+    document.getElementById('finalInput').disabled = false;
+    document.getElementById('finalSendBtn').disabled = false;
+    document.getElementById('finalEndBtn').disabled = false;
+  }
+  if (finalScore > 0 && finalTaskSubmitted) {
+    renderFinalScore(finalScore, { 流程: '-', 准确: '-', 亲和: '-', 覆盖: '-' }, '（刷新后仅保留总分，详细维度评分请重新开始获取）');
+  }
+}
+// Timer
+// ============================================================
+function startTimer() {
+  const saved = localStorage.getItem(LS_PREFIX+'_study_seconds');
+  if (saved) studySeconds = parseInt(saved);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    studySeconds++;
+    updateTimerDisplay();
+    if (studySeconds % 10 === 0) localStorage.setItem(LS_PREFIX+'_study_seconds', studySeconds);
+  }, 1000);
+}
+function updateTimerDisplay() {
+  const mins = Math.floor(studySeconds/60), secs = studySeconds%60;
+  const ts = String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0');
+  const el = document.getElementById('timerDisplay'); if (el) el.textContent = ts;
+  const mt = document.getElementById('mhTimer'); if (mt) mt.textContent = '\u23f1 '+ts;
+}
+
+// ============================================================
+// Tab switching
+// ============================================================
+function switchTab(btn, panelId) {
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.parentElement.parentElement.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+// ============================================================
+// Notes
+// ============================================================
+function toggleNotes() { document.getElementById('notesPanel').classList.toggle('open'); }
+function updateNotesForSection(index) {
+  document.getElementById('notesChapterLabel').textContent = courseData.sections[index].title;
+  const saved = JSON.parse(localStorage.getItem(LS_PREFIX+'_notes')||'{}');
+  document.getElementById('notesTextarea').value = saved[index]||'';
+}
+function loadNotes() {
+  const saved = JSON.parse(localStorage.getItem(LS_PREFIX+'_notes')||'{}');
+  const ta = document.getElementById('notesTextarea');
+  if (ta) {
+    ta.value = saved[currentSection]||'';
+    ta.addEventListener('input', function() {
+      const all = JSON.parse(localStorage.getItem(LS_PREFIX+'_notes')||'{}');
+      all[currentSection] = this.value;
+      localStorage.setItem(LS_PREFIX+'_notes', JSON.stringify(all));
+    });
+  }
+}
+
+// ============================================================
+// Progress Persistence
+// ============================================================
+function restoreChapterQuizUI() {
+  Object.keys(chapterQuizAnswers).forEach(key => {
+    const [chIdx, qi] = key.split('_').map(Number);
+    if (isNaN(chIdx) || isNaN(qi)) return;
+    const ans = chapterQuizAnswers[key];
+    if (!ans) return;
+    const card = document.getElementById('chquiz-' + chIdx + '-' + qi);
+    if (!card) return;
+    const q = chapterQuizzes[chIdx] && chapterQuizzes[chIdx][qi];
+    if (!q) return;
+    card.dataset.answered = 'true';
+    const options = card.querySelectorAll('.quiz-option');
+    options.forEach(b => {
+      const oi = parseInt(b.dataset.option);
+      b.style.pointerEvents = 'none';
+      if (oi === q.correct) b.classList.add('correct');
+      else if (oi === ans.selected && !ans.isCorrect) b.classList.add('wrong');
+      else b.classList.add('disabled');
+    });
+    const fb = document.getElementById('feedback-chquiz-' + chIdx + '-' + qi);
+    if (fb) {
+      if (ans.isCorrect) {
+        fb.innerHTML = '\u2705 回答正确！';
+        fb.classList.add('show', 'correct');
+      } else {
+        fb.innerHTML = '\u274c 回答错误，正确答案是 <strong style="color:#991b1b;">' + String.fromCharCode(65 + q.correct) + '</strong>。<button class="btn btn-outline" style="margin-left:8px;font-size:12px;padding:4px 12px;vertical-align:middle" onclick="resetChapterQuiz(' + chIdx + ',' + qi + ')">重新作答</button>';
+        fb.classList.add('show', 'wrong');
+        card.style.borderColor = 'var(--danger)';
+      }
+    }
+  });
+}
+function saveProgress() {
+  const state = { completedSections: [...completedSections], chapterQuizDone, chapterQuizAnswers, ch3Submitted, ch3Score, ch5Submitted, ch5Score, finalTaskSubmitted, finalScore, finalConversationStarted, finalMessages, finalRound, finalAiScoring, currentSection };
+  localStorage.setItem(LS_PREFIX+'_progress', JSON.stringify(state));
+}
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LS_PREFIX+'_progress'));
+    if (saved) {
+      completedSections = new Set(saved.completedSections||[]);
+      chapterQuizDone = saved.chapterQuizDone || [false,false,false,false,false,false,false];
+      chapterQuizAnswers = saved.chapterQuizAnswers || {};
+      ch3Submitted = saved.ch3Submitted || false;
+      ch3Score = saved.ch3Score || 0;
+      ch5Submitted = saved.ch5Submitted || false;
+      ch5Score = saved.ch5Score || 0;
+      finalTaskSubmitted = saved.finalTaskSubmitted||false; finalScore = saved.finalScore||0;
+      finalConversationStarted = saved.finalConversationStarted || false;
+      finalMessages = saved.finalMessages || [];
+      finalRound = saved.finalRound || 0;
+      finalAiScoring = saved.finalAiScoring || false;
+      currentSection = saved.currentSection||0;
+      // Migration: old data without chapterQuizAnswers → can't restore quiz UI, reset quiz states
+      const hasDoneButNoAnswers = chapterQuizDone.some(d => d) && Object.keys(chapterQuizAnswers).length === 0;
+      if (hasDoneButNoAnswers) {
+        chapterQuizDone = [false,false,false,false,false,false,false];
+      }
+      // Validate currentSection is still accessible after potential resets
+      const navCheck = canNavigateTo(currentSection);
+      if (!navCheck.ok) currentSection = 0;
+      updateProgress(); updateSidebarLocks();
+      if (finalTaskSubmitted) {
+        // final exam UI restored below after renderSections
+      }
+      if (ch3Submitted) {
+        const ta = document.getElementById('ch3Textarea');
+        if (ta) ta.disabled = true;
+        document.getElementById('ch3RefPanel').classList.add('show');
+        document.getElementById('ch3ScorePanel').style.display = 'block';
+        document.getElementById('ch3SubmitBtn').style.display = 'none';
+        document.getElementById('ch3Done').style.display = 'inline';
+        document.getElementById('ch3ResetBtn').style.display = 'inline';
+        // rebuild simple score display from saved score
+        const dims = [{name:'知识内容覆盖',max:20},{name:'学习习惯描述',max:20},{name:'课堂表现反馈',max:20},{name:'效果外化展示',max:20},{name:'待提升+后续引导',max:20}];
+        const dimsContainer = document.getElementById('ch3ScoreDims');
+        if (dimsContainer) dimsContainer.innerHTML = dims.map((d,i)=>{
+          const barColor = ch3Score >= 60 ? '#059669' : '#DC2626';
+          return '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:600">'+(i+1)+'. '+d.name+'</span><span style="color:'+barColor+';font-weight:700">刷新后不显示明细</span></div><div style="height:6px;background:#E2E8F0;border-radius:3px"><div style="height:100%;width:100%;background:#94a3b8;border-radius:3px"></div></div></div>';
+        }).join('');
+        const totalEl = document.getElementById('ch3ScoreTotal');
+        if (totalEl) {
+          const passed = ch3Score >= 60;
+          totalEl.style.background = passed ? '#ecfdf5' : '#fef2f2';
+          totalEl.style.color = passed ? '#065f46' : '#991b1b';
+          totalEl.innerHTML = passed ? '✅ 总分 ' + ch3Score + ' / 100（通过）' : '❌ 总分 ' + ch3Score + ' / 100（未通过，需≥60分）';
+        }
+      }
+      if (ch5Submitted) {
+        const ta = document.getElementById('ch5Textarea');
+        if (ta) ta.disabled = true;
+        document.getElementById('ch5ScorePanel').style.display = 'block';
+        document.getElementById('ch5RefPanel').classList.add('show');
+        document.getElementById('ch5Done').style.display = 'inline';
+        document.getElementById('ch5ResetBtn').style.display = 'inline';
+        hideElement('ch5SubmitBtn');
+        // rebuild score display
+        const dims = [{name:'方案介绍清晰',max:20},{name:'性价比说服',max:20},{name:'紧迫性营造',max:20},{name:'价值外化',max:20},{name:'理念升华',max:20}];
+        const dimsContainer = document.getElementById('ch5ScoreDims');
+        if (dimsContainer) dimsContainer.innerHTML = dims.map((d,i)=>{
+          const barColor = ch5Score >= 60 ? '#059669' : '#DC2626';
+          return '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:600">'+(i+1)+'. '+d.name+'</span><span style="color:'+barColor+';font-weight:700">刷新后不显示明细</span></div><div style="height:6px;background:#E2E8F0;border-radius:3px"><div style="height:100%;width:100%;background:#94a3b8;border-radius:3px"></div></div></div>';
+        }).join('');
+        const totalEl = document.getElementById('ch5ScoreTotal');
+        if (totalEl) {
+          const passed = ch5Score >= 60;
+          totalEl.style.background = passed ? '#ecfdf5' : '#fef2f2';
+          totalEl.style.color = passed ? '#065f46' : '#991b1b';
+          totalEl.innerHTML = passed ? '✅ 总分 ' + ch5Score + ' / 100（通过）' : '❌ 总分 ' + ch5Score + ' / 100（未通过，需≥60分）';
+        }
+      }
+      renderSections();
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      const section = document.querySelector('.section[data-section="'+currentSection+'"]');
+      if (section) section.classList.add('active');
+      setupFinalTaskListener();
+      restoreFinalConversation();
+      restoreChapterQuizUI();
+    } else {
+      navigateTo(0);
+    }
+  } catch(e) {
+    navigateTo(0);
+  }
+}
+
+// ============================================================
+// Certificate
+// ============================================================
+function checkCertificate() {
+  const allDone = completedSections.size >= courseData.sections.length && finalTaskSubmitted && finalScore >= 60;
+  if (allDone) {
+    setTimeout(() => {
+      showToast('\ud83c\udfc6 恭喜完成全部课程！点击领取结业证书', 'success');
+      document.getElementById('certFinalScore').textContent = '\u7ec8\u6781\u8003\u6838\u5f97\u5206\uff1a'+finalScore+' \u5206';
+      document.getElementById('certDate').textContent = new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
+      document.getElementById('certOverlay').style.display = 'flex';
+    }, 1000);
+  }
+}
+function closeCertificate() { document.getElementById('certOverlay').style.display = 'none'; }
+function printCertificate() {
+  const cert = document.getElementById('certPaper');
+  const win = window.open('','_blank','width=750,height=600');
+  win.document.write('<html><head><meta charset="UTF-8"><title>结业证书</title><style>');
+  win.document.write('body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f1f5f9;}');
+  win.document.write('.cert{background:#fff;width:700px;padding:48px 36px;text-align:center;border:2px solid #e2e8f0;border-radius:12px;}');
+  win.document.write('.cert h1{font-size:28px;color:#3730A3;margin-bottom:4px;}');
+  win.document.write('.cert .sub{font-size:12px;color:#64748b;letter-spacing:0.1em;margin-bottom:24px;}');
+  win.document.write('.cert .body{font-size:15px;line-height:2;color:#1e293b;}');
+  win.document.write('.cert .name{display:inline-block;border-bottom:2px solid #4F46E5;min-width:120px;padding:4px 12px;margin:0 4px;}');
+  win.document.write('.cert .course{font-weight:700;color:#3730A3;margin:8px 0;}');
+  win.document.write('.cert .score{margin:20px 0 4px;font-size:16px;font-weight:600;color:#10b981;}');
+  win.document.write('.cert .final-score{margin:4px 0 20px;font-size:14px;font-weight:600;color:#3730A3;}');
+  win.document.write('.cert .footer{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-top:32px;border-top:1px solid #e2e8f0;padding-top:16px;}');
+  win.document.write('</style></head><body><div class="cert">');
+  win.document.write(cert.innerHTML.replace(/<button[^>]*>.*?<\/button>/g,''));
+  win.document.write('</div></body></html>');
+  win.document.close(); setTimeout(() => win.print(), 500);
+}
+
+// ============================================================
+// Toast & Sidebar
+// ============================================================
+function showToast(msg, type) {
+  const existing = document.querySelector('.toast'); if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast '+type; toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<script src="https://lp-theory-exam.app.workbuddy.host/score-sdk.js?sharecode=4R6NIRSM7B" data-api="https://lp-theory-exam.app.workbuddy.host" data-sharecode="4R6NIRSM7B" data-course="lp-renewal-course" data-title="LP续费流程"></script>
+</body>
+</html>
